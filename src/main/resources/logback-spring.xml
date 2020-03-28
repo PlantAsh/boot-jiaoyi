@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<configuration>
+    <!--application.yml 传递参数，不能使用logback自带的<property>标签-->
+    <springProperty scope="context" name="appname" source="logback.appname"/>
+    <springProperty scope="context" name="logdir" source="logback.logdir"/>
+    <contextName>${appname}</contextName>
+    <!--控制台日志输出配置-->
+    <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
+        <!--展示格式 layout-->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n
+            </pattern>
+        </layout>
+    </appender>
+    <!--按照每天生成日志文件-->
+    <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--如果只想要info级别的日志，只是过滤info还是会输出Error的，因为它们的级别高，所以我们使用下面策略-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <!--匹配到就禁止-->
+            <onMatch>DENY</onMatch>
+            <!--没有匹配到就允许-->
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+       如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天
+       的日志改名为今天的日期。即，<File> 的日志都是当天的。
+        -->
+        <!--<File>${logdir}/info.log</File>-->
+        <!--滚动策略，按照时间滚动-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${logdir}/info-%d{yyyy-MM-dd}.log</FileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%thread] %highlight(%-5level) %logger{36} %line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 按照每天生成错误日志文件 -->
+    <appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--如果只是想要 Error 级别的日志，那么需要过滤一下，默认是 info 级别的，ThresholdFilter-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>Error</level>
+        </filter>
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+      如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天
+      的日志改名为今天的日期。即，<File> 的日志都是当天的。
+
+        -->
+        <!--<File>${logdir}/error.log</File>-->
+        <!--滚动策略，按照时间滚动 TimeBasedRollingPolicy-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${logdir}/error-%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!--只保留最近90天的日志-->
+            <MaxHistory>90</MaxHistory>
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%thread] %-5level %logger{36} %line - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <root level="info">
+        <appender-ref ref="consoleLog"/>
+        <appender-ref ref="fileInfoLog"/>
+        <appender-ref ref="fileErrorLog"/>
+    </root>
+</configuration>
