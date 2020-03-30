@@ -13,6 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>boot-jiaoyi</name>
 	<description>senlin_jiaoyi</description>
+	<packaging>war</packaging>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -20,6 +21,7 @@
 		<mybatis.version>2.1.0</mybatis.version>
 		<web.version>2.2.3.RELEASE</web.version>
 		<fastjson.version>1.2.62</fastjson.version>
+		<cloud.context.version>2.2.1.RELEASE</cloud.context.version>
 	</properties>
 
 	<dependencies>
@@ -94,6 +96,13 @@
 			<version>9.0.30</version>
 		</dependency>
 
+		<!--需要引入该jar才能使bootstrap配置文件生效-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-context</artifactId>
+			<version>${cloud.context.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -103,6 +112,25 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<resources>
+			<!-- 打包时将jsp文件拷贝到META-INF目录下-->
+			<resource>
+				<!-- 指定resources插件处理哪个目录下的资源文件 -->
+				<directory>src/main/webapp</directory>
+				<!--注意此次必须要放在此目录下才能被访问到-->
+				<targetPath>META-INF/resources</targetPath>
+				<includes>
+					<include>**/**</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/**</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
 	</build>
 
 	<repositories>

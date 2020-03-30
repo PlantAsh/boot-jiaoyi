@@ -4,8 +4,10 @@ import cn.senlin.jiaoyi.entity.InformationCode;
 import cn.senlin.jiaoyi.entity.UserInformation;
 import cn.senlin.jiaoyi.service.InformationService;
 import cn.senlin.jiaoyi.util.PropertiesUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -19,6 +21,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/information")
 @SessionAttributes({ "inFloor", "inMajor", "userInformation", "UserAccount", "userLevel"})
@@ -75,12 +78,12 @@ public class InformationController {
 				text = text.replace("\r\n", "<br/>");
 				usin.setUserInfo(text);
 			}
-			UserInformation usin2 = new UserInformation();
+			UserInformation usin2 = informationService.loadInformation(userAccount);
 			String result = informationService.updateInformation(usin, usin2.getUserName());
 			if (!result.equals("success")) {
 				out.print("<script>alert('" + result + "')</script>");
 				out.flush();
-				return "user/information";
+				return "user/user_information";
 			}
 			model.addAttribute("userInformation", usin);
 			String level = (String) session.getAttribute("userLevel");
@@ -88,28 +91,30 @@ public class InformationController {
 		} catch (Exception e) {
 			// Auto-generated catch block
 			e.printStackTrace();
-			return "user/information";
+			return "user/user_information";
 		}
 	}
 
 	/*--------------------------------------------------------------------------*/
 
-	@SuppressWarnings("unchecked")
 	private String addPicture(MultipartFile imgFile, String userAccount) {
 		String fileName = imgFile.getOriginalFilename();
+		if (StringUtils.isEmpty(fileName)) {
+			return "error";
+		}
 		// 获取上传文件类型的扩展名,先得到.的位置，再截取从.的下一个位置到文件的最后，最后得到扩展名
 		String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
 		// 对扩展名进行小写转换
 		ext = ext.toLowerCase();
 		// 定义一个数组，用于保存可上传的文件类型
-		List fileTypes = new ArrayList();
+		List<String> fileTypes = new ArrayList<>();
 		fileTypes.add("jpg");
 		fileTypes.add("jpeg");
 		fileTypes.add("bmp");
 		fileTypes.add("gif");
 		fileTypes.add("png");
 
-		String path = null;
+		String path = "";
 		File file;
 		if (fileTypes.contains(ext)) { // 如果扩展名属于允许上传的类型，则创建文件
 			String filePath = propertiesUtils.getFilePath() + File.separator + "senlin/information";
@@ -117,14 +122,14 @@ public class InformationController {
             if(secondFolder.exists()) {                        //如果二级文件夹存在，则创建文件  
             	file = new File(secondFolder,fileName);
             }else {                                            //如果二级文件夹不存在，则创建二级文件夹  
-                secondFolder.mkdir();
+                secondFolder.mkdirs();
                 file = new File(secondFolder,fileName);    //创建完二级文件夹后，再合建文件  
             }
 			try {
 				imgFile.transferTo(file); // 保存上传的文件
 				path = filePath + File.separator + userAccount + File.separator + fileName;
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("存储图片失败：", e);
 			}
 		}
 		return path;

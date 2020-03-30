@@ -42,14 +42,8 @@ public class InformationServiceimpl implements InformationService {
 			ar.setUserAccount(usin.getUserAccount());
 			ar.setUserName(usin.getUserName());
 			int j = articleMapper.updateUserName(ar);
-			if(j == 0) {
-				return "数据库错误";
-			}
 		}
 		int i = userInformationMapper.updateInformationSelective(usin);
-		if(i == 0) {
-			return "数据库错误";
-		}
 		return "success";
 	}
 

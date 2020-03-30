@@ -246,7 +246,6 @@ public class SellController {
 	 * @param userAccount
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	private String addPicture(MultipartFile imgFile, String userAccount) {
 		try {
 			String fileName = imgFile.getOriginalFilename();
@@ -258,14 +257,13 @@ public class SellController {
 			// 对扩展名进行小写转换
 			ext = ext.toLowerCase();
 			// 定义一个数组，用于保存可上传的文件类型
-			List fileTypes = new ArrayList();
+			List<String> fileTypes = new ArrayList<>();
 			fileTypes.add("jpg");
 			fileTypes.add("jpeg");
 			fileTypes.add("bmp");
 			fileTypes.add("gif");
 			fileTypes.add("png");
 
-			String path = null;
 			File file;
 			Date date = new Date();
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS_");
@@ -274,22 +272,17 @@ public class SellController {
 			if (fileTypes.contains(ext)) { // 如果扩展名属于允许上传的类型，则创建文件
 				String filePath = propertiesUtils.getFilePath() + File.separator + "article_image";
 				File secondFolder = new File(filePath, userAccount);
-	            if(secondFolder.exists()) {                        //如果二级文件夹存在，则创建文件  
+	            if(secondFolder.exists()) {                        //如果二级文件夹存在，则创建文件
 	            	file = new File(secondFolder, newName);
-	            }else {                                            //如果二级文件夹不存在，则创建二级文件夹  
-	                secondFolder.mkdir();
+	            }else {                                            //如果二级文件夹不存在，则创建二级文件夹
+	                secondFolder.mkdirs();
 	                file = new File(secondFolder, newName);    //创建完二级文件夹后，再合建文件
-	            }
-				try {
-					imgFile.transferTo(file); // 保存上传的文件
-					path = "article_image" + File.separator + userAccount + File.separator + newName;
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
+				imgFile.transferTo(file); // 保存上传的文件
+				return "article_image" + File.separator + userAccount + File.separator + newName;
 			} else {
 				return "error";
 			}
-			return path;
 		} catch(Exception e) {
 			log.error("存储图片失败：", e);
 			return "error";

@@ -1,3 +1,3 @@
 logback:
-  logdir: D:/project/jiaoyi/log
+  logdir: /project/jiaoyi/log/
   appname: jiaoyi
