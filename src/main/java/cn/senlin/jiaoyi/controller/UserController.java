@@ -11,10 +11,10 @@ import cn.senlin.jiaoyi.util.Md5Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -53,7 +53,7 @@ public class UserController {
 	 * @throws Exception
 	 */
 	@PostMapping(value = "/login")
-	public ModelAndView Login(@RequestBody UserDTO userDTO, HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView Login(UserDTO userDTO, HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView view = new ModelAndView("user/login");
 
 		response.setContentType("text/html;charset=UTF-8");
@@ -111,7 +111,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping(value = "/regist")
-	public String Regist(HttpServletResponse response, @RequestBody UserDTO userDTO) {
+	public String Regist(HttpServletResponse response, UserDTO userDTO) {
 		response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
@@ -141,7 +141,7 @@ public class UserController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/cancel")
+	@GetMapping(value = "/cancel")
 	public String cancel(HttpServletRequest request) {
 		try {
 			 Enumeration<String> em = request.getSession().getAttributeNames();
@@ -164,7 +164,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping(value = "/modifyPassword")
-	public String modifyPassword(HttpSession session, HttpServletResponse response, @RequestBody UserDTO userDTO) {
+	public String modifyPassword(HttpSession session, HttpServletResponse response, UserDTO userDTO) {
 		response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 

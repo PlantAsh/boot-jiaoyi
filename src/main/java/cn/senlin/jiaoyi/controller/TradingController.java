@@ -2,16 +2,18 @@ package cn.senlin.jiaoyi.controller;
 
 import cn.senlin.jiaoyi.entity.Article;
 import cn.senlin.jiaoyi.entity.TradingInformation;
+import cn.senlin.jiaoyi.entity.User;
 import cn.senlin.jiaoyi.entity.UserInformation;
+import cn.senlin.jiaoyi.entity.util.Reply;
+import cn.senlin.jiaoyi.enums.SystemConstantEnum;
 import cn.senlin.jiaoyi.service.ArticleService;
 import cn.senlin.jiaoyi.service.InformationService;
 import cn.senlin.jiaoyi.service.TradingService;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Controller
 @RequestMapping("/trading")
 @SessionAttributes({ "estimate", "tradingId", "otherUser" })
@@ -36,18 +39,26 @@ public class TradingController {
 	
 	@Resource
 	private InformationService informationService;
-	
-	@RequestMapping(value = "/addTrading", method = RequestMethod.POST)
-	public String addTrading(HttpSession session, HttpServletResponse response, int articleId) {
+
+	/**
+	 * 添加交易信息
+	 *
+	 * @param session
+	 * @param response
+	 * @param articleId
+	 * @return
+	 */
+	@PostMapping(value = "/addTrading")
+	@ResponseBody
+	public Reply addTrading(HttpSession session, HttpServletResponse response, int articleId) {
 		try {
-			String userAccount = (String) session.getAttribute("userAccount");
-			Article ar;
-			ar = articleService.getArticle(articleId);
+			String userAccount = (String) session.getAttribute(SystemConstantEnum.USER_ACCOUNT.getCode());
+			Article article = articleService.getArticle(articleId);
 			TradingInformation trading = new TradingInformation();
 			trading.setTradingAccount(userAccount);
 			trading.setArticleId(articleId);
-			trading.setUserAccount(ar.getUserAccount());
-			trading.setTradingPrice(ar.getArticlePrice());
+			trading.setUserAccount(article.getUserAccount());
+			trading.setTradingPrice(article.getArticlePrice());
 			Date date = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 			trading.setTradingDate(sdf.format(date));
@@ -59,21 +70,25 @@ public class TradingController {
 			}
 			Map<String, Object> map = new HashMap<>();
 			map.put("flag", flag);
-			String json = JSONObject.toJSONString(map);
-			response.setCharacterEncoding("UTF-8");
-	        response.flushBuffer();
-	        response.getWriter().write(json);
-	        response.getWriter().flush();
-	        response.getWriter().close();
-			return null;
+
+			return Reply.ok(map);
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.error("添加交易信息报错：", e);
 			return null;
 		}
 	}
-	
-	@RequestMapping(value = "/getState", method = RequestMethod.POST)
-	public String getState(HttpSession session, HttpServletResponse response, int articleId) {
+
+	/**
+	 * 获取交易状态
+	 *
+	 * @param session
+	 * @param response
+	 * @param articleId
+	 * @return
+	 */
+	@PostMapping(value = "/getState")
+	@ResponseBody
+	public Reply getState(HttpSession session, HttpServletResponse response, int articleId) {
 		try {
 			String userAccount = (String) session.getAttribute("userAccount");
 			String result = tradingService.getState(articleId, userAccount);
@@ -83,21 +98,24 @@ public class TradingController {
 			}
 			Map<String, Object> map = new HashMap<>();
 			map.put("flag", flag);
-			String json = JSONObject.toJSONString(map);
-			response.setCharacterEncoding("UTF-8");
-	        response.flushBuffer();
-	        response.getWriter().write(json);
-	        response.getWriter().flush();
-	        response.getWriter().close();
-			return null;
+
+			return Reply.ok(map);
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.error("获取交易状态报错：", e);
 			return null;
 		}
 	}
-	
-	@RequestMapping(value = "/trading_ifm", method = RequestMethod.POST)
-	public String trading_ifm(HttpSession session, HttpServletResponse response) {
+
+	/**
+	 * 获取主页交易记录
+	 *
+	 * @param session
+	 * @param response
+	 * @return
+	 */
+	@GetMapping(value = "/trading_ifm")
+	@ResponseBody
+	public Reply trading_ifm(User user, HttpSession session, HttpServletResponse response) {
 		try {
 			String userAccount = (String) session.getAttribute("userAccount");
 			List<TradingInformation> tra;
@@ -105,15 +123,10 @@ public class TradingController {
 			Map<String, Object> map = new HashMap<>();
 			map.put("trading_ifm", tra);
 			map.put("userAccount", userAccount);
-			String json = JSONObject.toJSONString(map);
-			response.setCharacterEncoding("UTF-8");
-			response.flushBuffer();
-			response.getWriter().write(json);
-			response.getWriter().flush();
-			response.getWriter().close();
-			return null;
+
+			return Reply.ok(map);
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.error("获取主页交易记录报错：", e);
 			return null;
 		}
 	}

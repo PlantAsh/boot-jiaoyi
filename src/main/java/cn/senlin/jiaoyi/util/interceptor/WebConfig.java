@@ -45,7 +45,7 @@ public class WebConfig implements WebMvcConfigurer {
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
             //创建session
             HttpSession session = request.getSession();
-            //重复登陆,自动被登出
+
             if (session.getAttribute(SystemConstantEnum.SESSION_USER_KEY.getCode()) == null) {
                 try {
                     response.sendRedirect(request.getContextPath() + "/jsp/user/login.jsp");  //重定向到登录界面
