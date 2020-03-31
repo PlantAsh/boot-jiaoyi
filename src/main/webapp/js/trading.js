@@ -13,7 +13,7 @@ function trading(articleId) {
 			dataType : 'json',// 返回的值以JSON方式解释
 			data : 'articleId=' + articleId,
 			success : function(json) {// 如果调用成功
-				if(json.flag) {
+				if(json.data.flag) {
 					var jiaoyi = "";
 					jiaoyi = jiaoyi + '<input class="am-btn am-btn-default" type="button" value="等待确认" disabled="disabled" />';
 					$('#jiaoyi').html(jiaoyi);
@@ -32,7 +32,7 @@ function getState(articleId,articleState,ar_userAccount,userAccount,userLevel) {
 			dataType : 'json',// 返回的值以JSON方式解释
 			data : 'articleId=' + articleId,
 			success : function(json) {// 如果调用成功
-				if(json.flag) {
+				if(json.data.flag) {
 					jiaoyi = jiaoyi + '<input class="am-btn am-btn-default" type="button" value="等待确认" disabled="disabled" />';
 					$('#jiaoyi').html(jiaoyi);
 				} else {
@@ -58,11 +58,11 @@ function trading_ifm_start() {
 
 function trading_ifm() {
 	$.ajax ({
-		type : 'post',
+		type : 'get',
 		url : getRootPath() + 'trading/trading_ifm',
 		dataType : 'json',
 		success : function(json) {
-			information(json);
+			information(json.data);
 		}
 	});
 }
