@@ -44,13 +44,12 @@ public class TradingController {
 	 * 添加交易信息
 	 *
 	 * @param session
-	 * @param response
 	 * @param articleId
 	 * @return
 	 */
 	@PostMapping(value = "/addTrading")
 	@ResponseBody
-	public Reply addTrading(HttpSession session, HttpServletResponse response, int articleId) {
+	public Reply addTrading(HttpSession session, int articleId) {
 		try {
 			String userAccount = (String) session.getAttribute(SystemConstantEnum.USER_ACCOUNT.getCode());
 			Article article = articleService.getArticle(articleId);
@@ -74,7 +73,7 @@ public class TradingController {
 			return Reply.ok(map);
 		} catch(Exception e) {
 			log.error("添加交易信息报错：", e);
-			return null;
+			return Reply.fail("添加交易信息有误！");
 		}
 	}
 
@@ -82,13 +81,12 @@ public class TradingController {
 	 * 获取交易状态
 	 *
 	 * @param session
-	 * @param response
 	 * @param articleId
 	 * @return
 	 */
 	@PostMapping(value = "/getState")
 	@ResponseBody
-	public Reply getState(HttpSession session, HttpServletResponse response, int articleId) {
+	public Reply getState(HttpSession session, int articleId) {
 		try {
 			String userAccount = (String) session.getAttribute("userAccount");
 			String result = tradingService.getState(articleId, userAccount);
@@ -102,7 +100,7 @@ public class TradingController {
 			return Reply.ok(map);
 		} catch(Exception e) {
 			log.error("获取交易状态报错：", e);
-			return null;
+			return Reply.fail("获取交易状态有误！");
 		}
 	}
 
@@ -110,12 +108,11 @@ public class TradingController {
 	 * 获取主页交易记录
 	 *
 	 * @param session
-	 * @param response
 	 * @return
 	 */
 	@GetMapping(value = "/trading_ifm")
 	@ResponseBody
-	public Reply trading_ifm(User user, HttpSession session, HttpServletResponse response) {
+	public Reply trading_ifm(HttpSession session) {
 		try {
 			String userAccount = (String) session.getAttribute("userAccount");
 			List<TradingInformation> tra;
@@ -127,67 +124,74 @@ public class TradingController {
 			return Reply.ok(map);
 		} catch(Exception e) {
 			log.error("获取主页交易记录报错：", e);
-			return null;
+			return Reply.fail("获取主页交易记录有误！");
 		}
 	}
-	
-	@RequestMapping(value = "/update_trd", method = RequestMethod.POST)
-	public String update_trd(HttpServletResponse response, String state, int tradingId, int articleId) {
+
+	/**
+	 * 修改交易状态
+	 *
+	 * @param tradingInformation
+	 * @return
+	 */
+	@PostMapping(value = "/update_trd")
+	@ResponseBody
+	public Reply update_trd(@RequestBody TradingInformation tradingInformation) {
 		try {
-			TradingInformation tr = new TradingInformation();
-			tr.setTradingId(tradingId);
-			tr.setArticleId(articleId);
-			tr.setTradingState(state);
-			String result = tradingService.update_trd(tr);
+			String result = tradingService.update_trd(tradingInformation);
 			boolean flag = false;
 			if(result.equals("success")) {
 				flag = true;
 			}
 			Map<String, Object> map = new HashMap<>();
 			map.put("flag", flag);
-			String json = JSONObject.toJSONString(map);
-			response.setCharacterEncoding("UTF-8");
-			response.flushBuffer();
-			response.getWriter().write(json);
-			response.getWriter().flush();
-			response.getWriter().close();
-			return null;
+
+			return Reply.ok(map);
 		} catch(Exception e) {
-			e.printStackTrace();
-			return null;
+			log.error("修改交易状态报错：", e);
+			return Reply.fail("修改交易状态有误！");
 		}
 	}
-	
-	@RequestMapping(value = "/getEstimate", method = RequestMethod.POST)
-	public String getEstimate(HttpServletResponse response, ModelMap model, int tradingId) {
+
+	/**
+	 * 获取交易评价
+	 *
+	 * @param session
+	 * @param tradingId
+	 * @return
+	 */
+	@PostMapping(value = "/getEstimate")
+	public Reply getEstimate(HttpSession session, int tradingId) {
 		try {
-			TradingInformation tr;
-			tr = tradingService.getEstimate(tradingId);
-			model.addAttribute("estimate", tr);
-			model.addAttribute("tradingId", tradingId);
-			Map<String, Object> map = new HashMap<>();
-			String json = JSONObject.toJSONString(map);
-			response.setCharacterEncoding("UTF-8");
-			response.flushBuffer();
-			response.getWriter().write(json);
-			response.getWriter().flush();
-			response.getWriter().close();
-			return null;
+			TradingInformation estimate = tradingService.getEstimate(tradingId);
+			session.setAttribute("estimate", estimate);
+			session.setAttribute("tradingId", tradingId);
+
+			return Reply.ok();
 		} catch(Exception e) {
-			e.printStackTrace();
-			return null;
+			log.error("获取交易评价报错：", e);
+			return Reply.fail("获取交易评价有误！");
 		}
 	}
-	
-	@RequestMapping(value = "/estimate", method = RequestMethod.POST)
-	public String estimate(HttpSession session, HttpServletResponse response, TradingInformation tr) throws Exception {
+
+	/**
+	 * 评价交易
+	 *
+	 * @param session
+	 * @param response
+	 * @param tradingInformation
+	 * @return
+	 */
+	@PostMapping(value = "/estimate")
+	public String estimate(HttpSession session, HttpServletResponse response, TradingInformation tradingInformation) {
 		response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-		
+
 		try {
+			PrintWriter out = response.getWriter();
+
 			int tradingId = (Integer) session.getAttribute("tradingId");
-			tr.setTradingId(tradingId);
+			tradingInformation.setTradingId(tradingId);
 //			if(tr.getBuyEstimate() != null) {
 //				String buy = tr.getBuyEstimate();
 //				buy = buy.replace("\r\n", "<br/>");
@@ -198,44 +202,47 @@ public class TradingController {
 //				sell = sell.replace("\r\n", "<br/>");
 //				tr.setSellEstimate(sell);
 //			}
-			String result = tradingService.update_Estimate(tr);
+			String result = tradingService.update_Estimate(tradingInformation);
 			if(!result.equals("success")) {
 				out.print("<script>alert('服务器错误')</script>");
 				out.flush();
 			}
 			return "user/user_level1";
 		} catch(Exception e) {
-			e.printStackTrace();
-			return null;
+			log.error("评价交易报错：", e);
+			return "user/user_level1";
 		}
 	}
-	
-	@RequestMapping(value = "/get_allEstimate")
-	public String get_allEstimate(HttpServletResponse response, ModelMap model, String otherAccount) {
+
+	/**
+	 * 获取交易完成记录
+	 *
+	 * @param session
+	 * @param otherAccount
+	 * @return
+	 */
+	@PostMapping(value = "/get_allEstimate")
+	@ResponseBody
+	public Reply get_allEstimate(HttpSession session, String otherAccount) {
 		try {
 			UserInformation usin;
 			usin = informationService.loadInformation(otherAccount);
-			model.addAttribute("otherUser", usin);
-			List<TradingInformation> tr;
-			tr = tradingService.get_allEstimate(otherAccount);
+			session.setAttribute("otherUser", usin);
+
+			List<TradingInformation> informationList = tradingService.get_allEstimate(otherAccount);
 			boolean flag = false;
-			if(tr.size() > 0) {
+			if(informationList.size() > 0) {
 				flag = true;
 			}
 			Map<String, Object> map = new HashMap<>();
 			map.put("flag", flag);
-			map.put("allEstimate", tr);
+			map.put("allEstimate", informationList);
 			map.put("otherAccount", otherAccount);
-			String json = JSONObject.toJSONString(map);
-			response.setCharacterEncoding("UTF-8");
-			response.flushBuffer();
-			response.getWriter().write(json);
-			response.getWriter().flush();
-			response.getWriter().close();
-			return null;
+
+			return Reply.ok(map);
 		} catch(Exception e) {
-			e.printStackTrace();
-			return null;
+			log.error("获取交易完成记录报错：", e);
+			return Reply.fail("获取交易完成记录有误！");
 		}
 	}
 

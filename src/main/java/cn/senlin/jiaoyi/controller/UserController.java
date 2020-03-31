@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -50,7 +49,6 @@ public class UserController {
 	 * @param response
 	 * @param userDTO
 	 * @return
-	 * @throws Exception
 	 */
 	@PostMapping(value = "/login")
 	public ModelAndView Login(UserDTO userDTO, HttpServletRequest request, HttpServletResponse response) {

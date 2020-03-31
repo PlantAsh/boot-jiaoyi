@@ -136,7 +136,7 @@ function choose(obj, tradingId, articleId) {
 		dataType : 'json',
 		data : {'state' : obj, 'tradingId' : tradingId, 'articleId' : articleId},
 		success : function(json) {
-			if(!json.flag) {
+			if(!json.data.flag) {
 				alert("服务器错误");
 			}
 			trading_ifm();

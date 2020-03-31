@@ -62,10 +62,7 @@ public class TradingServiceimpl implements TradingService {
 	}
 
 	public TradingInformation getEstimate(int tradingId) {
-		
-		TradingInformation tr;
-		tr = tradingInformationMapper.getEstimate(tradingId);
-		return tr;
+		return tradingInformationMapper.getEstimate(tradingId);
 	}
 
 	public String update_Estimate(TradingInformation trading) {
@@ -78,10 +75,7 @@ public class TradingServiceimpl implements TradingService {
 	}
 
 	public List<TradingInformation> get_allEstimate(String otherAccount) {
-
-		List<TradingInformation> tr;
-		tr = tradingInformationMapper.get_allEstimate(otherAccount);
-		return tr;
+		return tradingInformationMapper.get_allEstimate(otherAccount);
 	}
 
 }
