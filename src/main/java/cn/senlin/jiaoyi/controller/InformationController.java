@@ -58,7 +58,7 @@ public class InformationController {
 		PrintWriter out = response.getWriter();
 
 		try {
-			String userAccount = (String) session.getAttribute("UserAccount");
+			String userAccount = (String) session.getAttribute("userAccount");
 			/*// 转型为MultipartHttpRequest(重点的所在)
 			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 			// 获得第1张图片（根据前台的name名称得到上传的文件）

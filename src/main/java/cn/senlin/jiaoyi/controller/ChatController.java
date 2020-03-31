@@ -35,7 +35,7 @@ public class ChatController {
 	@RequestMapping(value = "/getMessages", method = RequestMethod.POST)
 	public String getMessages(HttpSession session, HttpServletResponse response, String sendUser, ModelMap model) {
 		try {
-			String acceptUser = (String) session.getAttribute("UserAccount");
+			String acceptUser = (String) session.getAttribute("userAccount");
 			List<Message> message2 = JSON.parseArray(JSON.toJSONString(session.getAttribute("message")), Message.class);
 			String sendUser2 = (String) session.getAttribute("sendUser");
 			List<Message> message;
@@ -74,7 +74,7 @@ public class ChatController {
 	@RequestMapping(value = "/getUser", method = RequestMethod.POST)
 	public String getUser(HttpSession session, HttpServletResponse response, ModelMap model, String name) {
 		try {
-			String acceptUser = (String) session.getAttribute("UserAccount");
+			String acceptUser = (String) session.getAttribute("userAccount");
 			List<Message> messageUser2 = JSON.parseArray(JSON.toJSONString(session.getAttribute("messageUser")), Message.class);
 			List<Message> messageUser;
 			messageUser = chatService.getUser(acceptUser);
@@ -132,7 +132,7 @@ public class ChatController {
 	@RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
 	public String sendMessage(HttpSession session, HttpServletResponse response, String text) {
 		try {
-			String acceptUser = (String) session.getAttribute("UserAccount");
+			String acceptUser = (String) session.getAttribute("userAccount");
 			String sendUser = (String) session.getAttribute("sendUser");
 			Message message = new Message();
 			message.setMessageSend(acceptUser);
@@ -173,7 +173,7 @@ public class ChatController {
 	@ResponseBody
 	public Reply getCount(HttpSession session) {
 		try {
-			String acceptUser = (String) session.getAttribute("UserAccount");
+			String acceptUser = (String) session.getAttribute("userAccount");
 			int count = chatService.getCount(acceptUser);
 			Map<String, Object> map = new HashMap<>();
 			map.put("count", count);

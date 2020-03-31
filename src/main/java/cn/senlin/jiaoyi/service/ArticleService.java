@@ -5,16 +5,16 @@ import cn.senlin.jiaoyi.entity.Article;
 import java.util.List;
 
 public interface ArticleService {
-	public List<Article> loadArticle(Article article, int first, int number) throws Exception;
+	List<Article> loadArticle(Article article, int first, int number);
 	
-	public int getPage(Article article) throws Exception;
+	int getPage(Article article);
 	
-	public String addArticle(Article article) throws Exception;
+	String addArticle(Article article);
 	
-	public String deleteArticle(Integer articleId) throws Exception;
+	String deleteArticle(Integer articleId);
 	
-	public Article getArticle(int articleId) throws Exception;
+	Article getArticle(int articleId);
 	
-	public String updateArticle(Article article) throws Exception;
+	String updateArticle(Article article);
 
 }

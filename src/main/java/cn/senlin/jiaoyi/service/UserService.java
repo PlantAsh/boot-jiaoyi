@@ -3,10 +3,10 @@ package cn.senlin.jiaoyi.service;
 import cn.senlin.jiaoyi.entity.User;
 
 public interface UserService {
-	public String addUser(User user) throws Exception;
+	String addUser(User user);
 	
-	public User loadUser(String userAccount) throws Exception;
+	User loadUser(String userAccount);
 	
-	public String updatePassword(User user) throws Exception;
+	String updatePassword(User user);
 
 }

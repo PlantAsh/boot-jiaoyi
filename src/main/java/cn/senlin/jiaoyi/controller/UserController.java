@@ -1,79 +1,126 @@
 package cn.senlin.jiaoyi.controller;
 
+import cn.senlin.jiaoyi.dto.UserDTO;
 import cn.senlin.jiaoyi.entity.InformationCode;
 import cn.senlin.jiaoyi.entity.User;
 import cn.senlin.jiaoyi.entity.UserInformation;
+import cn.senlin.jiaoyi.enums.SystemConstantEnum;
 import cn.senlin.jiaoyi.service.InformationService;
 import cn.senlin.jiaoyi.service.UserService;
+import cn.senlin.jiaoyi.util.Md5Utils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * 用户控制器
+ *
+ * @author swu
+ * @date 2020-03-31
+ */
+@Slf4j
 @Controller
 @RequestMapping("/user")
-@SessionAttributes({"UserAccount","userInformation","userLevel","inFloor"})
 public class UserController {
 	@Resource
 	private UserService userService;
 	@Resource
 	private InformationService informationService;
-	
-	@RequestMapping(value = "/login")
-	public String Login(HttpServletResponse response, ModelMap model, User user) throws Exception {
+
+	/**
+	 * 用户登录
+	 *
+	 * @param request
+	 * @param response
+	 * @param userDTO
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping(value = "/login")
+	public ModelAndView Login(@RequestBody UserDTO userDTO, HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView view = new ModelAndView("user/login");
+
 		response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-		
+
 		try {
-			User us = userService.loadUser(user.getUserAccount());
-			
-			if(us == null) {
+			PrintWriter out = response.getWriter();
+
+			User user = userService.loadUser(userDTO.getUserAccount());
+			if(StringUtils.isEmpty(userDTO.getUserPassword()) || user == null
+					|| !Md5Utils.encode(userDTO.getUserPassword()).equals(user.getUserPassword())) {
 				out.print("<script>alert('账号或密码错误')</script>");
 				out.flush();
-				return "user/login";
-			} else if(!us.getUserPassword().equals(user.getUserPassword())) {
-				out.print("<script>alert('账号或密码错误')</script>");
-				out.flush();
-				return "user/login";
+				return view;
 			} else {
+				Map<String, Object> model = new HashMap<>();
 				String sendUser = "";
-				model.addAttribute("sendUser", sendUser);
-				List<InformationCode> inFloor;
-				inFloor = informationService.loadByType("floor");
-				model.addAttribute("inFloor", inFloor);
-				String level = "user_level" + us.getUserLevel();
-				model.addAttribute("UserAccount", us.getUserAccount());
-				UserInformation usin = informationService.loadInformation(us.getUserAccount());
-				model.addAttribute("userInformation", usin);
-				model.addAttribute("userLevel", level);
-				return "user/" + level;
+				List<InformationCode> inFloor = informationService.loadByType("floor");
+				String level = "user_level" + user.getUserLevel();
+				UserInformation usin = informationService.loadInformation(user.getUserAccount());
+
+				HttpSession session = request.getSession();
+				session.setAttribute(SystemConstantEnum.SESSION_USER_KEY.getCode(), user);
+				session.setAttribute(SystemConstantEnum.USER_ACCOUNT.getCode(), user.getUserAccount());
+				session.setAttribute(SystemConstantEnum.USER_INFORMATION.getCode(), usin);
+				session.setAttribute(SystemConstantEnum.IN_FLOOR.getCode(), inFloor);
+				session.setAttribute(SystemConstantEnum.USER_LEVEL.getCode(), level);
+
+				Cookie cookie = new Cookie("senlinUser", null);
+//				cookie.setMaxAge(60 * 60 * 24 * 30); //cookie保存30天
+				cookie.setMaxAge(-1); //浏览器关闭时cookie删除
+				cookie.setPath("/");
+				response.addCookie(cookie);
+
+				model.put("inFloor", inFloor);
+				model.put("userAccount", user.getUserAccount());
+				model.put("userInformation", usin);
+				model.put("userLevel", level);
+
+				view.addObject(model);
+				view.setViewName("user/" + level);
+				return view;
 			}
 		} catch (Exception e) {
-			
-			e.printStackTrace();
+			log.error("用户登录报错：", e);
 		}
-		return "user/login";
+		return view;
 	}
-	
-	@RequestMapping(value = "/regist", method = RequestMethod.POST)
-	public String Regist(HttpServletResponse response, User userBean) throws Exception {
+
+	/**
+	 * 用户注册
+	 *
+	 * @param response
+	 * @param userDTO
+	 * @return
+	 */
+	@PostMapping(value = "/regist")
+	public String Regist(HttpServletResponse response, @RequestBody UserDTO userDTO) {
 		response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-		
+
 		try {
-			userBean.setUserLevel("1");
-			String result = userService.addUser(userBean);
+			PrintWriter out = response.getWriter();
+
+			userDTO.setUserLevel("1");
+			userDTO.setUserPassword(Md5Utils.encode(userDTO.getUserPassword()));
+			String result = userService.addUser(userDTO);
 			
 			if (!result.equals("success")) {
 				out.print("<script>alert('" + result + "')</script>");
@@ -83,53 +130,70 @@ public class UserController {
 				return "user/login";
 			}
 		} catch (Exception e) {
-			
-			e.printStackTrace();
+			log.error("用户注册报错：", e);
 			return "user/regist";
 		}
 	}
-	
+
+	/**
+	 * 退出登录
+	 *
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "/cancel")
 	public String cancel(HttpServletRequest request) {
 		try {
-			 Enumeration em = request.getSession().getAttributeNames();
+			 Enumeration<String> em = request.getSession().getAttributeNames();
 			 while(em.hasMoreElements()){   
-				 request.getSession().removeAttribute(em.nextElement().toString());				  
+				 request.getSession().removeAttribute(em.nextElement());
 			 }
 			return "user/login";
 		} catch (Exception e) {
-			
-			e.printStackTrace();
+			log.error("退出登录报错：", e);
 			return "user/login";
 		}
 	}
-	
-	@RequestMapping(value = "/modifyPassword", method = RequestMethod.POST)
-	public String modifyPassword(HttpSession session, HttpServletResponse response, User user, String oldPassword) throws Exception {
+
+	/**
+	 * 修改密码
+	 *
+	 * @param session
+	 * @param response
+	 * @param userDTO
+	 * @return
+	 */
+	@PostMapping(value = "/modifyPassword")
+	public String modifyPassword(HttpSession session, HttpServletResponse response, @RequestBody UserDTO userDTO) {
 		response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-		
+
 		try {
-			String level = (String) session.getAttribute("userLevel");
-			String userAccount = (String) session.getAttribute("UserAccount");
+			PrintWriter out = response.getWriter();
+
+			String level = (String) session.getAttribute(SystemConstantEnum.USER_LEVEL.getCode());
+			String userAccount = (String) session.getAttribute(SystemConstantEnum.USER_ACCOUNT.getCode());
 			User us = userService.loadUser(userAccount);
-			if(!us.getUserPassword().equals(oldPassword)) {
+			if(!us.getUserPassword().equals(Md5Utils.encode(userDTO.getOldPassword()))) {
 				out.print("<script>alert('原密码错误')</script>");
 				out.flush();
 				return "user/" + level;
 			} else {
-				user.setUserAccount(userAccount);
-				String result = userService.updatePassword(user);
+				userDTO.setUserAccount(userAccount);
+				userDTO.setUserPassword(Md5Utils.encode(userDTO.getUserPassword()));
+				String result = userService.updatePassword(userDTO);
 				if (!result.equals("success")) {
 					out.print("<script>alert('" + result + "')</script>");
 					out.flush();
 				}
+
+				us.setUserPassword(userDTO.getUserPassword());
+				session.setAttribute(SystemConstantEnum.SESSION_USER_KEY.getCode(), us);
+
 				return "user/" + level;
 			}
 		} catch (Exception e) {
-			
-			e.printStackTrace();
+			log.error("修改密码报错：", e);
 			return "user/login";
 		}
 	}

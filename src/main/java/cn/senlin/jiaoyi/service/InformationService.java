@@ -6,9 +6,9 @@ import cn.senlin.jiaoyi.entity.UserInformation;
 import java.util.List;
 
 public interface InformationService {
-	UserInformation loadInformation(String userAccount) throws Exception;
+	UserInformation loadInformation(String userAccount);
 	
-	List<InformationCode> loadByType(String codeType) throws Exception;
+	List<InformationCode> loadByType(String codeType);
 	
-	String updateInformation(UserInformation usin, String userName) throws Exception;
+	String updateInformation(UserInformation usin, String userName);
 }

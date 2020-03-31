@@ -5,18 +5,18 @@ import cn.senlin.jiaoyi.entity.TradingInformation;
 import java.util.List;
 
 public interface TradingService {
-	public String addTrading(TradingInformation trading) throws Exception;
+	String addTrading(TradingInformation trading);
 	
-	public String getState(int articleId, String userAccount) throws Exception;
+	String getState(int articleId, String userAccount);
 	
-	public List<TradingInformation> trading_ifm(String userAccount) throws Exception;
+	List<TradingInformation> trading_ifm(String userAccount);
 	
-	public String update_trd(TradingInformation trading) throws Exception;
+	String update_trd(TradingInformation trading);
 	
-	public TradingInformation getEstimate(int tradingId) throws Exception;
+	TradingInformation getEstimate(int tradingId);
 	
-	public String update_Estimate(TradingInformation trading) throws Exception;
+	String update_Estimate(TradingInformation trading);
 	
-	public List<TradingInformation> get_allEstimate(String otherAccount) throws Exception;
+	List<TradingInformation> get_allEstimate(String otherAccount);
 
 }

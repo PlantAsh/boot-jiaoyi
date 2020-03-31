@@ -40,7 +40,7 @@ public class TradingController {
 	@RequestMapping(value = "/addTrading", method = RequestMethod.POST)
 	public String addTrading(HttpSession session, HttpServletResponse response, int articleId) {
 		try {
-			String userAccount = (String) session.getAttribute("UserAccount");
+			String userAccount = (String) session.getAttribute("userAccount");
 			Article ar;
 			ar = articleService.getArticle(articleId);
 			TradingInformation trading = new TradingInformation();
@@ -75,7 +75,7 @@ public class TradingController {
 	@RequestMapping(value = "/getState", method = RequestMethod.POST)
 	public String getState(HttpSession session, HttpServletResponse response, int articleId) {
 		try {
-			String userAccount = (String) session.getAttribute("UserAccount");
+			String userAccount = (String) session.getAttribute("userAccount");
 			String result = tradingService.getState(articleId, userAccount);
 			boolean flag = false;
 			if(result.equals("待同意")) {
@@ -99,7 +99,7 @@ public class TradingController {
 	@RequestMapping(value = "/trading_ifm", method = RequestMethod.POST)
 	public String trading_ifm(HttpSession session, HttpServletResponse response) {
 		try {
-			String userAccount = (String) session.getAttribute("UserAccount");
+			String userAccount = (String) session.getAttribute("userAccount");
 			List<TradingInformation> tra;
 			tra = tradingService.trading_ifm(userAccount);
 			Map<String, Object> map = new HashMap<>();

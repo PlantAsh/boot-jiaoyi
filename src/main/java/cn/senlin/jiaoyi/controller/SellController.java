@@ -162,7 +162,7 @@ public class SellController {
 			article.setArticleId(ar.getArticleId());
 			Date date = new Date();
 			article.setModifyDate(date);
-			String userAccount = (String) session.getAttribute("UserAccount");
+			String userAccount = (String) session.getAttribute("userAccount");
 			article.setArticleModify(userAccount);
 			// 转型为MultipartHttpRequest(重点的所在)
 			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;

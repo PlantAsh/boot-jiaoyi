@@ -1,12 +1,11 @@
 package cn.senlin.jiaoyi.controller;
 
+import cn.senlin.jiaoyi.dto.UserDTO;
 import cn.senlin.jiaoyi.entity.User;
 import cn.senlin.jiaoyi.entity.util.Reply;
 import cn.senlin.jiaoyi.service.UserService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -21,15 +20,14 @@ public class RegistCheckController {
 	/**
 	 * 检查用户名
 	 *
-	 * @param user
+	 * @param userDTO
 	 * @return
-	 * @throws Exception
 	 */
-	@RequestMapping(value = "/checkUserAccount", method = RequestMethod.POST)
+	@PostMapping(value = "/checkUserAccount")
 	@ResponseBody
-	public Reply checkUserName(User user) throws Exception {
+	public Reply checkUserName(@RequestBody UserDTO userDTO) {
 		//检验用户名是否存在
-		User us = userService.loadUser(user.getUserAccount());
+		User us = userService.loadUser(userDTO.getUserAccount());
 	    //用户名是否存在的标志
 	    boolean flag = true;
 	    if(us == null){

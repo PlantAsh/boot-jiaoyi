@@ -27,7 +27,7 @@
 
 <%
 Article ar = (Article) session.getAttribute("article");
-String userAccount = (String) session.getAttribute("UserAccount");
+String userAccount = (String) session.getAttribute("userAccount");
 String userLevel = (String) session.getAttribute("userLevel");
 %>
 

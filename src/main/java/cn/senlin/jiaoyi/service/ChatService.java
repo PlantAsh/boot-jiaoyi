@@ -5,12 +5,12 @@ import cn.senlin.jiaoyi.entity.Message;
 import java.util.List;
 
 public interface ChatService {
-	public List<Message> getMessage(String sendUser, String acceptUser) throws Exception;
+	List<Message> getMessage(String sendUser, String acceptUser);
 
-	public List<Message> getUser(String acceptUser) throws Exception;
+	List<Message> getUser(String acceptUser);
 
-	public String addMessage(Message message) throws Exception;
+	String addMessage(Message message);
 	
-	public int getCount(String acceptUser) throws Exception;
+	int getCount(String acceptUser);
 
 }

@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 
 @MapperScan("cn.senlin.jiaoyi.mapper")
-//@PropertySource(value = "file:D:\\文件\\git\\boot-jiaoyi\\config\\jiaoyi.properties")
-@PropertySource(value = "file:/project/config/jiaoyi.properties")
+@PropertySource(value = "file:D:\\文件\\git\\boot-jiaoyi\\config\\jiaoyi.properties")
+//@PropertySource(value = "file:/project/config/jiaoyi.properties")
 @SpringBootApplication
 public class JiaoyiApplication {
 
