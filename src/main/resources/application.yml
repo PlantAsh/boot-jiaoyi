@@ -8,11 +8,13 @@ server:
 spring:
   application:
     name: senlin-jiaoyi
+  #文件上传配置
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 100MB
       location: ${multipart.location}
+  #数据源配置
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -29,6 +31,27 @@ spring:
     view:
       prefix: /jsp/
       suffix: .jsp
+  #配置静态资源访问路径
+  resources:
+    static-locations: file:${file.path}
+  #redis配置
+  redis:
+    #Redis数据库索引（默认为0）
+    database: ${redis.database}
+    host: ${redis.host}
+    port: ${redis.port}
+    password: ${redis.password}
+    timeout: ${redis.timeout}
+    jedis:
+      pool:
+        #连接池最大连接数（使用负值表示没有限制）
+        max-active: ${redis.maxActive}
+        #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: ${redis.maxWait}
+        #连接池中的最大空闲连接
+        max-idle: ${redis.maxIdle}
+        #连接池中的最小空闲连接
+        min-idle: ${redis.minIdle}
 
 mybatis:
   # 对应mapper映射xml文件的所在路径
