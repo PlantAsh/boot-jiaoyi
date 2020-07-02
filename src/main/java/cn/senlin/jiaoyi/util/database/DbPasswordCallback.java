@@ -2,7 +2,8 @@ package cn.senlin.jiaoyi.util.database;
 
 import com.alibaba.druid.filter.config.ConfigTools;
 import com.alibaba.druid.util.DruidPasswordCallback;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
@@ -12,9 +13,9 @@ import java.util.Properties;
  * @author swu
  * @date 2020-03-17
  */
-@Slf4j
 public class DbPasswordCallback extends DruidPasswordCallback {
     private static final long serialVersionUID = -2902056230895632227L;
+    Logger log = LoggerFactory.getLogger(DbPasswordCallback.class);
 
     @Override
     public void setProperties(Properties properties) {

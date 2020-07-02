@@ -1,11 +1,7 @@
 package cn.senlin.jiaoyi.dto;
 
 import cn.senlin.jiaoyi.entity.User;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
 public class UserDTO extends User {
     private static final long serialVersionUID = 6815536575291494654L;
 
@@ -13,5 +9,13 @@ public class UserDTO extends User {
      * 旧密码
      */
     String oldPassword;
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
 
 }

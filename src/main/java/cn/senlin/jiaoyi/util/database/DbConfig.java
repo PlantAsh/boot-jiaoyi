@@ -1,10 +1,11 @@
 package cn.senlin.jiaoyi.util.database;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,10 +23,11 @@ import java.util.Objects;
  * @author swu
  * @date 2020-03-17
  */
-@Slf4j
 @Configuration
 @MapperScan(basePackages = DbConfig.PACKAGE, sqlSessionFactoryRef = "sqlSessionFactory")
 public class DbConfig {
+    Logger log = LoggerFactory.getLogger(DbConfig.class);
+
     static final String PACKAGE = "cn.senlin.jiaoyi.mapper";
     private static final String MAPPER_LOCATION = "classpath:mapper/*.xml";
     private static final String DOMAIN_PACKAGE = "cn.senlin.jiaoyi";

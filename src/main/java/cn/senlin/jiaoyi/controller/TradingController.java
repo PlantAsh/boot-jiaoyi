@@ -2,17 +2,15 @@ package cn.senlin.jiaoyi.controller;
 
 import cn.senlin.jiaoyi.entity.Article;
 import cn.senlin.jiaoyi.entity.TradingInformation;
-import cn.senlin.jiaoyi.entity.User;
 import cn.senlin.jiaoyi.entity.UserInformation;
 import cn.senlin.jiaoyi.entity.util.Reply;
 import cn.senlin.jiaoyi.enums.SystemConstantEnum;
 import cn.senlin.jiaoyi.service.ArticleService;
 import cn.senlin.jiaoyi.service.InformationService;
 import cn.senlin.jiaoyi.service.TradingService;
-import com.alibaba.fastjson.JSONObject;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -25,11 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @Controller
 @RequestMapping("/trading")
 @SessionAttributes({ "estimate", "tradingId", "otherUser" })
 public class TradingController {
+	Logger log = LoggerFactory.getLogger(TradingController.class);
 	
 	@Resource
 	private TradingService tradingService;
