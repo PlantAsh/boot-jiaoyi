@@ -6,7 +6,8 @@ import cn.senlin.jiaoyi.entity.util.Reply;
 import cn.senlin.jiaoyi.service.ArticleService;
 import cn.senlin.jiaoyi.service.InformationService;
 import cn.senlin.jiaoyi.util.PropertiesUtils;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
@@ -20,11 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @Controller
 @RequestMapping("/article")
 @SessionAttributes({ "articleFloor", "inFloor" })
 public class ArticleController {
+	Logger log = LoggerFactory.getLogger(ArticleController.class);
 	
 	@Resource
 	private ArticleService articleService;

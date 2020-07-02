@@ -4,7 +4,8 @@ import cn.senlin.jiaoyi.entity.InformationCode;
 import cn.senlin.jiaoyi.entity.UserInformation;
 import cn.senlin.jiaoyi.service.InformationService;
 import cn.senlin.jiaoyi.util.PropertiesUtils;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
@@ -21,11 +22,11 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 @Controller
 @RequestMapping("/information")
 @SessionAttributes({ "inFloor", "inMajor", "userInformation", "UserAccount", "userLevel"})
 public class InformationController {
+	Logger log = LoggerFactory.getLogger(InformationController.class);
 
 	@Resource
 	private InformationService informationService;

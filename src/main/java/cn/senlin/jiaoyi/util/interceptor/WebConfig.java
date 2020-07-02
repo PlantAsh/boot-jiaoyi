@@ -1,7 +1,8 @@
 package cn.senlin.jiaoyi.util.interceptor;
 
 import cn.senlin.jiaoyi.enums.SystemConstantEnum;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
@@ -19,7 +20,6 @@ import java.io.IOException;
  * @author swu
  * @date 2020-03-31
  */
-@Slf4j
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
@@ -40,6 +40,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     static class SessionHandlerInterceptor implements HandlerInterceptor {
+        Logger log = LoggerFactory.getLogger(SessionHandlerInterceptor.class);
 
         @Override
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

@@ -1,6 +1,7 @@
 package cn.senlin.jiaoyi.redis;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
@@ -20,9 +21,9 @@ import java.util.concurrent.TimeUnit;
  * @author wusen
  * @date 2020-04-09
  */
-@Slf4j
 @Component
 public class RedisBaseDAO {
+    Logger log = LoggerFactory.getLogger(RedisBaseDAO.class);
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;

@@ -5,7 +5,8 @@ import cn.senlin.jiaoyi.entity.util.Reply;
 import cn.senlin.jiaoyi.service.ChatService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
@@ -23,11 +24,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @Controller
 @RequestMapping("/chat")
 @SessionAttributes({ "message", "sendUser", "messageUser" })
 public class ChatController {
+	Logger log = LoggerFactory.getLogger(ChatController.class);
 	
 	@Resource
 	private ChatService chatService;

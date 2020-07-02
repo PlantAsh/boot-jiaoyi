@@ -1,7 +1,5 @@
 package cn.senlin.jiaoyi.enums;
 
-import lombok.Getter;
-
 public enum SystemConstantEnum {
     /**
      * 用户信息
@@ -28,11 +26,13 @@ public enum SystemConstantEnum {
      */
     IN_FLOOR("inFloor");
 
-    @Getter
     private String code;
 
     SystemConstantEnum(String code) {
         this.code = code;
     }
 
+    public String getCode() {
+        return code;
+    }
 }
