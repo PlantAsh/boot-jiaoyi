@@ -4,7 +4,8 @@ import cn.senlin.jiaoyi.entity.Article;
 import cn.senlin.jiaoyi.entity.UserInformation;
 import cn.senlin.jiaoyi.service.ArticleService;
 import cn.senlin.jiaoyi.util.PropertiesUtils;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
@@ -25,12 +26,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Slf4j
 @Controller
 @RequestMapping("/sell")
 @SessionAttributes({ "article" })
 public class SellController {
-	
+	Logger log = LoggerFactory.getLogger(SellController.class);
+
 	@Resource
 	private ArticleService articleService;
 	@Resource
@@ -92,10 +93,8 @@ public class SellController {
 			if(!result.equals("success")) {
 				out.print("<script>alert('" + result + "')</script>");
 				out.flush();
-				return "trading/article";
-			} else {
-				return "trading/article";
 			}
+			return "trading/article";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -196,11 +195,10 @@ public class SellController {
 			if(!result.equals("success")) {
 				out.print("<script>alert('" + result + "')</script>");
 				out.flush();
-				return "trading/article_information";
 			} else {
 				model.addAttribute("article", article);
-				return "trading/article_information";
 			}
+			return "trading/article_information";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -228,10 +226,8 @@ public class SellController {
 			if(!result.equals("success")) {
 				out.print("<script>alert('" + result + "')</script>");
 				out.flush();
-				return "trading/article";
-			} else {
-				return "trading/article";
 			}
+			return "trading/article";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -284,12 +280,10 @@ public class SellController {
 			if (fileTypes.contains(ext)) { // 如果扩展名属于允许上传的类型，则创建文件
 				String filePath = propertiesUtils.getFilePath() + File.separator + "article_image";
 				File secondFolder = new File(filePath, userAccount);
-	            if(secondFolder.exists()) {                        //如果二级文件夹存在，则创建文件
-	            	file = new File(secondFolder, newName);
-	            }else {                                            //如果二级文件夹不存在，则创建二级文件夹
+	            if(!secondFolder.exists()) { //如果二级文件夹不存在，则创建二级文件夹
 	                secondFolder.mkdirs();
-	                file = new File(secondFolder, newName);    //创建完二级文件夹后，再合建文件
 				}
+				file = new File(secondFolder, newName);    //创建完二级文件夹后，再合建文件
 				imgFile.transferTo(file); // 保存上传的文件
 				return "article_image" + File.separator + userAccount + File.separator + newName;
 			} else {

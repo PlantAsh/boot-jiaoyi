@@ -6,7 +6,6 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Arrays;
 
-@Data
 public class Reply<T> implements Serializable {
     private static final long serialVersionUID = -9113106580865726761L;
 
@@ -193,5 +192,53 @@ public class Reply<T> implements Serializable {
         public String toString() {
             return "Reply.ReplyBuilder(res=" + this.res + ", msg=" + this.msg + ", data=" + this.data + ", bytes=" + Arrays.toString(this.bytes) + ", seqNo=" + this.seqNo + ", time=" + this.time + ")";
         }
+    }
+
+    public Integer getRes() {
+        return res;
+    }
+
+    public void setRes(Integer res) {
+        this.res = res;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public byte[] getBytes() {
+        return bytes;
+    }
+
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
+    }
+
+    public String getSeqNo() {
+        return seqNo;
+    }
+
+    public void setSeqNo(String seqNo) {
+        this.seqNo = seqNo;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

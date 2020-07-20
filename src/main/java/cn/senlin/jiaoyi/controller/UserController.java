@@ -8,7 +8,8 @@ import cn.senlin.jiaoyi.enums.SystemConstantEnum;
 import cn.senlin.jiaoyi.service.InformationService;
 import cn.senlin.jiaoyi.service.UserService;
 import cn.senlin.jiaoyi.util.Md5Utils;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,10 +34,11 @@ import java.util.Map;
  * @author swu
  * @date 2020-03-31
  */
-@Slf4j
 @Controller
 @RequestMapping("/user")
 public class UserController {
+	Logger log = LoggerFactory.getLogger(UserController.class);
+
 	@Resource
 	private UserService userService;
 	@Resource
