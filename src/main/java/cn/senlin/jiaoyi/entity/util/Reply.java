@@ -1,7 +1,6 @@
 package cn.senlin.jiaoyi.entity.util;
 
-import cn.senlin.jiaoyi.util.DateUtil;
-import lombok.Data;
+import cn.senlin.jiaoyi.util.DateUtils;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -20,36 +19,36 @@ public class Reply<T> implements Serializable {
 
     public Reply() {
         this.res = 0;
-        this.time = DateUtil.getNowTimeStr();
+        this.time = DateUtils.now();
     }
 
     public Reply(Integer res, String msg) {
         this.res = res;
         this.msg = msg;
-        this.time = DateUtil.getNowTimeStr();
+        this.time = DateUtils.now();
     }
 
     public Reply(Integer res, String msg, T data) {
         this.data = data;
         this.res = res;
         this.msg = msg;
-        this.time = DateUtil.getNowTimeStr();
+        this.time = DateUtils.now();
     }
 
     public static Reply<Object> ok(Object data) {
-        return builder().res(RES_SUCCESS).msg("success").data(data).time(DateUtil.getNowTimeStr()).build();
+        return builder().res(RES_SUCCESS).msg("success").data(data).time(DateUtils.now()).build();
     }
 
     public static Reply<Object> ok() {
-        return builder().res(RES_SUCCESS).msg("success").time(DateUtil.getNowTimeStr()).build();
+        return builder().res(RES_SUCCESS).msg("success").time(DateUtils.now()).build();
     }
 
     public static Reply<Object> fail(int res, String msg) {
-        return builder().res(res).msg(msg).data(null).time(DateUtil.getNowTimeStr()).build();
+        return builder().res(res).msg(msg).data(null).time(DateUtils.now()).build();
     }
 
     public static Reply<Object> fail(String msg) {
-        return builder().res(RES_ERROR).msg(msg).data(null).time(DateUtil.getNowTimeStr()).build();
+        return builder().res(RES_ERROR).msg(msg).data(null).time(DateUtils.now()).build();
     }
 
     private static <T> ReplyBuilder<Object> builder() {
