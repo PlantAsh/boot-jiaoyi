@@ -13,6 +13,61 @@ import java.util.Date;
 public class DateUtils {
 
     /**
+     * @return 当前时间
+     */
+    public static Date date() {
+        return new Date();
+    }
+
+    /**
+     * 当前时间，格式 yyyy-MM-dd HH:mm:ss
+     *
+     * @return 当前时间的标准形式字符串
+     */
+    public static String now() {
+        return formatDateTime(new Date());
+    }
+
+    /**
+     * 当前时间，格式 yyyy-MM-dd
+     *
+     * @return 当前时间的日期形式字符串
+     */
+    public static String nowDate() {
+        return formatDate(new Date());
+    }
+
+    /**
+     * 格式化日期时间<br>
+     * 格式 yyyy-MM-dd HH:mm:ss
+     *
+     * @param date 被格式化的日期
+     * @return 格式化后的日期
+     */
+    public static String formatDateTime(Date date) {
+        if (null == date) {
+            return null;
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat(DateConstant.NORM_DATETIME);
+        return formatter.format(date);
+    }
+
+    /**
+     * 格式化日期部分（不包括时间）<br>
+     * 格式 yyyy-MM-dd
+     *
+     * @param date 被格式化的日期
+     * @return 格式化后的字符串
+     */
+    public static String formatDate(Date date) {
+        if (null == date) {
+            return null;
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat(DateConstant.NORM_DATE);
+        return formatter.format(date);
+    }
+
+    /**
      * 将字符串转化为Date(可以识别yyyy-MM-dd/yyyy-MM-dd HH:mm:ss/yyyy-MM-dd'T'HH:mm:ss'Z')
      *
      * @param str
