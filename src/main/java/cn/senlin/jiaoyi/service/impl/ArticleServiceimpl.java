@@ -57,7 +57,7 @@ public class ArticleServiceimpl implements ArticleService {
 	}
 
 	public Article getArticle(int articleId) {
-		
+
 		return articleMapper.getArticle(articleId);
 	}
 

@@ -5,13 +5,12 @@ import cn.senlin.jiaoyi.entity.UserInformation;
 import cn.senlin.jiaoyi.service.ArticleService;
 import cn.senlin.jiaoyi.util.PropertiesUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -36,6 +35,8 @@ public class SellController {
 	private ArticleService articleService;
 	@Resource
 	private PropertiesUtils propertiesUtils;
+	@Resource
+	private KafkaTemplate<Object, Object> kafkaTemplate;
 
 	/**
 	 * 新增商品
@@ -235,6 +236,17 @@ public class SellController {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@GetMapping("/kafka")
+	@ResponseBody
+	void sendKafka() {
+		kafkaTemplate.send("wusen", "123");
+	}
+
+	@KafkaListener(id = "webGroup", topics = "wusen")
+	public void listen(String input) {
+		log.info("input value: {}", input);
 	}
 
 	/*--------------------------------------------------------------------------*/
