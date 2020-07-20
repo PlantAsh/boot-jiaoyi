@@ -33,6 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
         registration.excludePathPatterns("/user/login");
         registration.excludePathPatterns("/user/regist");
         registration.excludePathPatterns("/registCheck/checkUserAccount");
+        registration.excludePathPatterns("/sell/kafka");
         registration.excludePathPatterns("/jsp/**");
         registration.excludePathPatterns("/js/**");
         registration.excludePathPatterns("/css/**");

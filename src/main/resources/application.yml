@@ -52,6 +52,14 @@ spring:
         max-idle: ${redis.maxIdle}
         #连接池中的最小空闲连接
         min-idle: ${redis.minIdle}
+  kafka:
+    producer:
+      bootstrap-servers: ${kafka.host}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      bootstrap-servers: ${kafka.host}
+      auto-offset-reset: earliest
 
 mybatis:
   # 对应mapper映射xml文件的所在路径
