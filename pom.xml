@@ -18,7 +18,7 @@
 		<java.version>1.8</java.version>
 		<druid.version>1.1.20</druid.version>
 		<mybatis.version>2.1.0</mybatis.version>
-		<web.version>2.2.3.RELEASE</web.version>
+		<web.version>2.5.12</web.version>
 		<fastjson.version>1.2.62</fastjson.version>
 		<cloud.context.version>2.2.1.RELEASE</cloud.context.version>
 		<junit.version>4.13</junit.version>
